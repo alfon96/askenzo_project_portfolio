@@ -1,0 +1,43 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  font-size: 14px;
+  overflow-x: hidden;
+}
+
+.img-logo {
+  width: auto;
+  height: 73px;
+}
+
+.img-intro {
+  width: auto;
+  height: auto;
+  border-radius: 15px;
+  position: absolute;
+}
+
+.rounded-borders {
+  border-radius: 25px;
+}
+
+.background-image-container {
+  background-image: url("assets/askenzoapp.png"); /* Corrected path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: white;
+  height: 400px; /* Example height */
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+.screenshot {
+  width: 250px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.2);
+}
