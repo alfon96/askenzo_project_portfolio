@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AskEnzo App</title>
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.10.5/swagger-ui.css"
+      integrity="sha512-yZsFBaj8XNbTZcJXfAraipKZ7PftqEHJe5cUCL0gz9a8OhjPp9/1ICg6ieYKQBmoHBTZWfcKs3C/yzwPJQ5ufg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -34,14 +42,25 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
+    <button
+      id="topButton"
+      title="Go to top"
+      class="btn position-fixed scale-on-hover btn-outline-light bottom-0 end-0 m-2 shadow-lg z-5 bg-dark rounded-circle"
+    >
+      <i class="fa-solid fa-arrow-up text-white"></i>
+    </button>
+
     <header>
-      <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <nav
+        class="navbar navbar-expand-sm navbar-dark bg-dark"
+        data-bs-theme="dark"
+      >
         <div class="container-fluid mx-2 w-100">
           <a class="navbar-brand" href="index.html"
             ><img
               src="https://www.askenzo.it/assets/images/app-landing/product/logo-i-nostri-valori.png"
               alt="askenzo_logo"
-              class="img-fluid img-logo"
+              class="img-fluid img-logo scale-on-hover"
           /></a>
           <button
             class="navbar-toggler"
@@ -56,21 +75,10 @@
           </button>
           <div class="collapse navbar-collapse" id="navbarNavDropdown">
             <ul class="navbar-nav">
-              <li class="nav-item active">
-                <a class="nav-link" href="#"
-                  >Home <span class="sr-only">(current)</span></a
-                >
+              <li class="nav-item">
+                <a class="nav-link" href="#swagger-ui">SwaggerUI</a>
               </li>
 
-              <li class="nav-item">
-                <a class="nav-link" href="#discoveries">Discoveries</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#experiences">Experiences</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#users">Users</a>
-              </li>
               <li class="nav-item dropdown">
                 <a
                   class="nav-link dropdown-toggle"
@@ -86,9 +94,13 @@
                   class="dropdown-menu"
                   aria-labelledby="navbarDropdownMenuLink"
                 >
-                  <a class="dropdown-item" href="index.html">Frontend - App</a>
-                  <a class="dropdown-item" href="#">Frontend - WebApp</a>
-                  <a class="dropdown-item" href="#">Backend - Api</a>
+                  <a class="dropdown-item" href="frontend-app.html"
+                    >Frontend - App</a
+                  >
+                  <a class="dropdown-item" href="frontend-webapp.html"
+                    >Frontend - WebApp</a
+                  >
+                  <a class="dropdown-item active" href="#">Backend - Api</a>
                   <!-- <a class="dropdown-item" href="#"></a> -->
                 </div>
               </li>
@@ -118,8 +130,367 @@
       </nav>
     </header>
 
-    <section class="mt-5 mx-5"></section>
+    <section class="overview mt-5 mx-5">
+      <div class="container">
+        <div
+          class="row mx-5 d-flex align-items-center justify-content-center gy-3"
+        >
+          <div
+            class="col-12 d-flex flex-column align-items-center justify-content-center"
+          >
+            <h1 class="display-5 mt-5 text-black">Tech Stack</h1>
+            <p class="text-center mt-2 fw-semibold text-black">
+              Complete technological stack
+            </p>
+          </div>
 
+          <div class="col-6 col-sm-4 col-md-2">
+            <a href="#fastapi">
+              <img
+                src="assets\api\fastapi.png"
+                alt="Fast API"
+                class="img-fluid scale-on-hover"
+              />
+            </a>
+          </div>
+
+          <div class="col-6 col-sm-4 col-md-2">
+            <a href="#ecs">
+              <img
+                src="assets\api\amazon_ecs.png"
+                alt="Amazon ECS"
+                class="img-fluid scale-on-hover"
+              />
+            </a>
+          </div>
+          <div class="col-6 col-sm-4 col-md-2">
+            <a href="#rds-s3">
+              <img
+                src="assets\api\amazon_rds.png"
+                alt="Amazon RDS"
+                class="img-fluid scale-on-hover"
+              />
+            </a>
+          </div>
+
+          <div class="col-6 col-sm-4 col-md-2">
+            <a href="#rds-s3">
+              <img
+                src="assets\api\amazon_s3.png"
+                alt="Amazon S3"
+                class="img-fluid scale-on-hover"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="overview mt-5 mx-5">
+      <div class="container">
+        <div
+          class="row mx-5 d-flex align-items-center justify-content-center gy-3"
+        >
+          <div
+            class="col-12 d-flex flex-column align-items-center justify-content-center"
+          >
+            <h1 class="display-5 mt-5 text-black">AskEnzo APIs</h1>
+            <p class="text-center mt-2 fw-semibold text-black">
+              Bridging Apps with Data in Brindisi
+            </p>
+          </div>
+
+          <div class="col-12">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-center">
+                The AskEnzo APIs serve as the vital communication link between
+                our app and webapp and the SQL relational databases hosted on
+                Amazon RDS.
+              </li>
+
+              <li class="list-group-item text-center">
+                These APIs meticulously handle user information, experiences,
+                discoveries, likes, and also interact with Amazon S3 for
+                efficient image hosting.
+              </li>
+              <li class="list-group-item text-center">
+                Designed to cater to the needs of tourists in Brindisi and local
+                accommodation providers like hotels and B&Bs, AskEnzo APIs
+                facilitate these users to discover and offer unique experiences
+                in the city of Brindisi.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="fastapi mt-5 mx-5" id="fastapi">
+      <div class="container">
+        <div
+          class="row mx-5 d-flex align-items-center justify-content-center gy-3"
+        >
+          <div
+            class="col-12 d-flex flex-column align-items-center justify-content-center"
+          >
+            <h1 class="display-5 mt-5 text-black">FastAPI</h1>
+            <p class="text-center mt-2 fw-semibold text-black">
+              Embracing Modernity with FastAPI
+            </p>
+          </div>
+
+          <div class="col-12">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-center">
+                In our pursuit of a contemporary and robust framework for
+                Python, we embraced FastAPI for its simplicity and efficiency.
+              </li>
+
+              <li class="list-group-item text-center">
+                This choice enabled us to develop the necessary functionalities
+                for AskEnzo with remarkable ease, ensuring a seamless and
+                dynamic user experience.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="ecs mt-5 mx-5" id="ecs">
+      <div class="container">
+        <div
+          class="row mx-5 d-flex align-items-center justify-content-center gy-3"
+        >
+          <div
+            class="col-12 d-flex flex-column align-items-center justify-content-center"
+          >
+            <h1 class="display-5 mt-5 text-black">AWS ECS</h1>
+            <p class="text-center mt-2 fw-semibold text-black">
+              Scalable Solutions with AWS ECS
+            </p>
+          </div>
+
+          <div class="col-12">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-center">
+                To ensure that our APIs can scale in response to fluctuating
+                user demands, we've integrated AWS ECS into our infrastructure.
+              </li>
+
+              <li class="list-group-item text-center">
+                The APIs are developed and maintained within Azure Git
+                repositories, complete with Dockerfiles.
+              </li>
+
+              <li class="list-group-item text-center">
+                Our project also includes a YAML file that defines an automated
+                pipeline.
+              </li>
+              <li class="list-group-item text-center">
+                This pipeline adeptly handles the code, packages it into Docker,
+                and deploys it to AWS ECS, streamlining our development and
+                release processes.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rds mt-5 mx-5" id="rds-s3">
+      <div class="container">
+        <div
+          class="row mx-5 d-flex align-items-center justify-content-center gy-3"
+        >
+          <div
+            class="col-12 d-flex flex-column align-items-center justify-content-center"
+          >
+            <h1 class="display-5 mt-5 text-black">Data Management</h1>
+            <p class="text-center mt-2 fw-semibold text-black">
+              Reliable Data Management with Amazon RDS
+            </p>
+          </div>
+
+          <div class="col-12">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-center">
+                Amazon RDS is our chosen solution for storing all application
+                data, except for images.
+              </li>
+
+              <li class="list-group-item text-center">
+                his approach guarantees a reliable, secure, and organized data
+                management system, ensuring data integrity and accessibility for
+                the AskEnzo app.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="stateless mt-5 mx-5">
+      <div class="container">
+        <div
+          class="row mx-5 d-flex align-items-center justify-content-center gy-3"
+        >
+          <div
+            class="col-12 d-flex flex-column align-items-center justify-content-center"
+          >
+            <h1 class="display-5 mt-5 text-black">Stateless Architecture</h1>
+            <p class="text-center mt-2 fw-semibold text-black">
+              Securing Access with JWT and bcrypt
+            </p>
+          </div>
+
+          <div class="col-12">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item text-center">
+                Our goal of achieving a stateless architecture led us to
+                implement JWT tokens for secure API access.
+              </li>
+
+              <li class="list-group-item text-center">
+                Additionally, we prioritize user security by encrypting all user
+                passwords using bcrypt, ensuring both safety and privacy within
+                the AskEnzo ecosystem.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="rds mt-5 mx-1">
+      <div class="container">
+        <div class="row d-flex align-items-center justify-content-center gy-3">
+          <div
+            class="col-12 d-flex flex-column align-items-center justify-content-center"
+          >
+            <h1 class="display-5 mt-5 text-black">Documentation</h1>
+            <p class="text-center mt-2 fw-semibold text-black">
+              Complete swagger documentation
+            </p>
+          </div>
+          <div id="swagger-ui" class="col-12"></div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="ending mt-5">
+      <div class="container-fluid bg-dark w-100 overflow-hidden">
+        <div
+          class="mt-5 gy-5 pb-3 row text-white d-flex text-center align-items-center justify-content-center"
+        >
+          <div class="col-12 col-sm-6 col-md-4 col-md-4">
+            <a class="navbar-brand" href="index.html"
+              ><img
+                src="https://www.askenzo.it/assets/images/app-landing/logo.png"
+                alt="askenzo_logo"
+                class="img-fluid img-logo scale-on-hover"
+            /></a>
+            <div class="row gx-3 d-flex justify-content-center">
+              <div class="mt-1 col-12 text-center">
+                <span class="nav-item">
+                  <span class="fa-stack scale-on-hover">
+                    <a
+                      href="https://www.linkedin.com/in/alfonso-falcone-621b151b2/"
+                    >
+                      <i class="fas fa-circle fa-stack-2x"></i>
+                      <i class="fa-brands fa-linkedin fa-stack-1x text-black">
+                      </i
+                    ></a>
+                  </span>
+                </span>
+                <span class="nav-item">
+                  <span class="fa-stack scale-on-hover">
+                    <a href="https://github.com/alfon96">
+                      <i class="fas fa-circle fa-stack-2x text-warning"></i>
+                      <i class="fa-brands fa-github fa-stack-1x text-black">
+                      </i>
+                    </a>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 col-sm-6 col-md-2">
+            <h6 class="footer-title text-white">Get in touch</h6>
+            <ul class="footer-list">
+              <li>Alfonso Falcone</li>
+              <li>+393711659844</li>
+              <li>alfalcone@gmail.com</li>
+            </ul>
+          </div>
+
+          <div class="col-12 col-sm-6 col-md-2">
+            <h6 class="footer-title">AskEnzo API</h6>
+            <ul class="footer-list">
+              <li>
+                <a
+                  href="api.html"
+                  class="text-white link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                  >APIs</a
+                >
+              </li>
+              <li>
+                <a
+                  href="api.html#swagger-ui"
+                  class="text-white link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                  >Documentation</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 col-sm-6 col-md-2">
+            <h6 class="footer-title">AskEnzo Admin Panel</h6>
+            <ul class="footer-list">
+              <li>
+                <a
+                  href="api.html#swagger-ui"
+                  class="text-white link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                  >Admin Panel</a
+                >
+              </li>
+            </ul>
+          </div>
+          <div class="col-12 mt-2 text-center">
+            <hr />
+            <p class="fst-italic mx-5 footer-text">
+              Interested in discussing job opportunities?<br />
+              Feel free to connect with me on LinkedIn, email me, or message me
+              on WhatsApp. I'm always open to exploring new professional
+              avenues.
+            </p>
+          </div>
+
+          <div class="col-12 text-start copyright-text g-2">
+            &copy; Copyrights 2023 Alfonso Falcone. All Rights Reserved
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      window.onload = () => {
+        SwaggerUIBundle({
+          url: "assets/api/swagger.json",
+          dom_id: "#swagger-ui",
+          presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+          layout: "BaseLayout",
+        });
+      };
+    </script>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.10.5/swagger-ui.js"
+      integrity="sha512-xtApAk1WaaIqbZYZFgXj1PuuvKZfj+PCbpWA9bRgyQRTKP2vGPhuYtl8huAUThWmk8iGtt/h7IK3yXX+GURYNg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.10.5/swagger-ui-bundle.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.10.5/swagger-ui-standalone-preset.js"></script>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script
       src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
@@ -140,5 +511,12 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      document.getElementById("topButton").onclick = function () {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+      };
+    </script>
   </body>
 </html>

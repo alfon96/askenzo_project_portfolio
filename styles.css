@@ -25,10 +25,6 @@ html {
 }
 
 .background-image-container {
-  background-image: url("assets/askenzoapp.png"); /* Corrected path */
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
   color: white;
   height: 400px; /* Example height */
   display: flex;
@@ -36,8 +32,71 @@ html {
   text-align: center;
 }
 
+.app-image-start {
+  background-image: url("assets/askenzoapp.png"); /* Corrected path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.api-image-decorative {
+  background-image: url("assets/api/decoration.svg"); /* Corrected path */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
 .screenshot {
   width: 250px;
   border-radius: 10px;
   box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.2);
+}
+
+.img-sized {
+  width: auto;
+  height: 200px;
+  border-radius: 15px;
+}
+
+.footer-list {
+  text-decoration: none;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.footer-title {
+  color: var(--bs-warning) !important;
+  text-transform: capitalize;
+}
+
+.copyright-text {
+  font-size: 10px;
+}
+
+.footer-text {
+  font-size: 13px;
+}
+
+.carousel-inner {
+  max-width: 768px;
+  max-height: 432px;
+}
+
+.carousel-item img {
+  object-fit: cover;
+}
+
+.scale-on-hover {
+  transition: 0.2s ease-in-out;
+}
+
+.scale-on-hover:hover {
+  transform: scale(1.15);
+  cursor: pointer;
+}
+
+.ending {
+  margin-top: 135px !important;
 }

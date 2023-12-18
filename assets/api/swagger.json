@@ -1,0 +1,2345 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "🚀 AskEnzo API",
+    "description": "\n## 🧳Tourist APIs\n* **Get**: get the single user instance, with all its fields.\n\n* **Update**: update every field at once, it doesn't update new empty fields (no pass).\n\n* **Update Password**: update tourist's password.\n\n* **Signup**: creates a new tourist.\n\n* **Delete**: delete tourist.\n\n* **Get Likes**: get all user's liked experiences by id.\n\n* **Toggle Likes**: creates(deletes) a new(existing) like.\n\n* **Signin**: signin function.\n\n\n## 🏨 Host APIs\n* **Get**: get the single host instance, with all its fields.\n\n* **Update**: update every field at once, it doesn't update new empty fields (no pass).\n\n* **Update Password**: update tourist password.\n\n* **Signup**: creates a new host.\n\n* **Delete**: delete the host by its id.\n\n* **Signin**: login function.\n\n\n## 🚣 Experience\n* **Get**: get a list of N experiences by id, from cursor x.\n\n* **Update**: update every field at once, it doesn't update new empty fields.\n\n* **Create**: creates a new experience.\n\n* **Delete**: delete the experience by its id.\n\n\n## 🏛️ Discovery\n* **Get**: get a list of N discovery, from x to y.\n\n* **Update**: update every field at once, it doesn't update new empty fields.\n\n* **Create**: creates a new discovery.\n\n* **Delete**: delete the discovery by its id.\n\n\n## 💬 Popup\n* **Get**: get a list of N popups, from x to y.\n\n* **Update**: update every field at once, it doesn't update new empty fields.\n\n* **Create**: creates a new popup.\n\n* **Delete**: delete the popup by its id.\n\n\n## 🖼️ Images\n* **Update**: replace an existing image.\n\n* **Create**: creates a new image.\n\n* **Delete**: delete an image by its link.\n\n\n## 💂Admin\n* **Login**: login function.\n\n",
+    "version": "1.0.1"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "summary": "Home",
+        "operationId": "home__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tourist/": {
+      "get": {
+        "tags": ["Tourists"],
+        "summary": "Get My Data",
+        "description": "The function `get_my_data` returns the current tourist user.\n    \n    \n**param** tourist_user: The parameter `tourist_user` is of type `schemas.TouristUser` and is obtained\n    by calling the `get_current_tourist` function as a dependency\n    \n**type** tourist_user: schemas.TouristUser\n    \n**return** a dictionary with a key \"result\" and the value being the tourist_user object.",
+        "operationId": "get_my_data_tourist__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TouristUserResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Tourists"],
+        "summary": "Delete My Account",
+        "description": "The function `delete_my_account` deletes a tourist user account from the database if the provided\n    password is correct.\n    \n    \n**param** password: The `password` parameter is a string that represents the password provided by the\n    user to verify their identity before deleting their account\n    **type** password: str\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session. It is\n    obtained using the `get_db` dependency\n    **type** db: Session\n    \n**param** tourist_to_remove: The parameter `tourist_to_remove` is of type `schemas.TouristUser` and is\n    obtained by calling the `get_current_tourist` dependency. It represents the tourist user who wants\n    to delete their account\n    **type** tourist_to_remove: schemas.TouristUser\n    \n**return**: a dictionary with a key \"result\" and the value is the result of calling the function\n    `crud.delete_tourist()` with the argument `db_tourist_user` and `db`.",
+        "operationId": "delete_my_account_tourist__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Password",
+              "type": "string"
+            },
+            "name": "password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["Tourists"],
+        "summary": "Update My Info",
+        "description": "The function `update_my_info` updates the information of a tourist user in a database based on the\n    provided parameters.\n    \n    \n**param** new_name: The new name that you want to update for the tourist user\n    **type** new_name: str\n    \n**param** new_surname: The parameter `new_surname` is a string that represents the new surname of the\n    tourist user\n    **type** new_surname: str\n    \n**param** new_email: The new email address that you want to update for the tourist user\n    **type** new_email: str\n    \n**param** new_img_profile: The parameter `new_img_profile` is a string that represents the new image\n    profile for the tourist user. It is an optional parameter, which means it has a default value of an\n    empty string. If a new image profile is provided, it will be assigned to the `db_tourist_user.img\n    **type** new_img_profile: str\n    \n**param** new_state_id: The parameter `new_state_id` is an optional integer parameter that represents\n    the new state ID for the tourist user. It has a default value of `None` and is constrained to be\n    greater than or equal to 1 and less than or equal to 2\n    **type** new_state_id: int\n    \n**param** new_telephone: The `new_telephone` parameter is used to update the telephone number of a\n    tourist user. It is a string type parameter that represents the new telephone number that you want\n    to update for the tourist user\n    **type** new_telephone: str\n    \n**param** tourist_user: The parameter `tourist_user` is of type `schemas.TouristUser` and is obtained\n    using the `get_current_tourist` dependency. It represents the current tourist user making the\n    request\n    **type** tourist_user: schemas.TouristUser\n    \n**param** db: The `db` parameter is of type `Session` and is used to interact with the database. It is\n    obtained using the `get_db` dependency\n    **type** db: Session\n    \n**return**: a dictionary with the key \"result\" and the value being the result of the update operation\n    performed by the `crud.update` function.",
+        "operationId": "update_my_info_tourist__patch",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "New Name",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_name",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Surname",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_surname",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Email",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_email",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Img Profile",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_img_profile",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New State Id",
+              "maximum": 2,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "name": "new_state_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Telephone",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_telephone",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/tourist/update_password": {
+      "patch": {
+        "tags": ["Tourists"],
+        "summary": "Update My Password",
+        "description": "The function `update_my_password` updates the password of a tourist user in the database if the old\n    password is verified and the new password is not the same as the old one.\n    \n    \n**param** old_password: The old password that the user wants to update\n    **type** old_password: str\n    \n**param** new_password: The `new_password` parameter is a string that represents the new password that\n    the user wants to set\n    **type** new_password: str\n    \n**param** tourist_user: The `tourist_user` parameter is of type `schemas.TouristUser` and is used to\n    get the current tourist user from the database. It is obtained using the `get_current_tourist`\n    dependency\n    **type** tourist_user: schemas.TouristUser\n    \n**param** db: The parameter \"db\" is a dependency that represents the database connection. It is used to\n    interact with the database and perform CRUD (Create, Read, Update, Delete) operations. The \"get_db\"\n    function is responsible for providing the database connection to the function\n    \n**return**: a dictionary with the key \"result\" and the value being the result of the update operation\n    in the database.",
+        "operationId": "update_my_password_tourist_update_password_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Old Password",
+              "type": "string"
+            },
+            "name": "old_password",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "New Password",
+              "type": "string"
+            },
+            "name": "new_password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/tourist/signup": {
+      "post": {
+        "tags": ["Tourists"],
+        "summary": "Register Me",
+        "description": "The function `register_me` creates a new tourist user in the database with the provided information,\n    after validating the state_id.\n    \n    \n**param** tourist_user: The `tourist_user` parameter is an instance of the `TouristUserCreate` model\n    from the `schemas` module. It contains the data needed to create a new tourist user\n    **type** tourist_user: schemas.TouristUserCreate\n    \n**param** db: The `db` parameter is a database session object. It is used to interact with the database\n    and perform CRUD (Create, Read, Update, Delete) operations\n    **type** db: Session\n    \n**return**: a dictionary with a key \"result\" and the value is the result of calling the\n    \"create_tourist_user\" function from the \"crud\" module with the \"db\" and \"new_tourist_user\"\n    arguments.",
+        "operationId": "register_me_tourist_signup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TouristUserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tourist/signin": {
+      "post": {
+        "tags": ["Tourists"],
+        "summary": "Signin",
+        "description": "The `login` function takes an email and password as input, authenticates the user, and returns an\n    access token if successful, otherwise raises an HTTPException.\n    \n    \n**param** email: The email parameter is a string that represents the user's email address\n    **type** email: str\n    \n**param** password: The `password` parameter is a string that represents the user's password. It is\n    used to authenticate the user during the login process\n    **type** password: str\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session. It is\n    obtained using the `get_db` dependency\n    **type** db: Session\n    \n**return**: a dictionary with two keys: \"access_token\" and \"token_type\". The value of \"access_token\" is\n    the token generated by the `log.create_jwt()` function, and the value of \"token_type\" is \"bearer\".",
+        "operationId": "signin_tourist_signin_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Email",
+              "type": "string"
+            },
+            "name": "email",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Password",
+              "type": "string"
+            },
+            "name": "password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tourist/likes_list": {
+      "get": {
+        "tags": ["Tourists"],
+        "summary": "Get My Likes List",
+        "description": "The function `get_my_likes_list` retrieves a list of likes for a specific tourist user from a\n    database.\n    \n    \n**param** db: The parameter `db` is of type `Session` and is used to access the database session\n    **type** db: Session\n    \n**param** me: The `me` parameter is of type `schemas.TouristUser` and is obtained by calling the\n    `get_current_tourist` function. It represents the currently logged-in tourist user\n    **type** me: schemas.TouristUser\n    \n**return**: a dictionary with a single key-value pair. The key is \"result\" and the value is a list of\n    indexes.",
+        "operationId": "get_my_likes_list_tourist_likes_list_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Get My Likes List Tourist Likes List Get",
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/tourist/toggle_like": {
+      "post": {
+        "tags": ["Tourists"],
+        "summary": "Toggle Like",
+        "description": "The function `toggle_like` toggles the like status of an experience for a tourist user.\n    \n    \n**param** experience_id: The `experience_id` parameter is an integer that represents the ID of the\n    experience that the user wants to toggle the like status for\n    **type** experience_id: int\n    \n**param** db: The `db` parameter is of type `Session` and is used to interact with the database. It is\n    obtained using the `get_db` dependency\n    **type** db: Session\n    \n**param** me: The \"me\" parameter is of type \"schemas.TouristUser\" and represents the currently\n    authenticated tourist user. It is obtained using the \"Depends(get_current_tourist)\" dependency,\n    which is responsible for retrieving the authenticated user from the request\n    **type** me: schemas.TouristUser",
+        "operationId": "toggle_like_tourist_toggle_like_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Experience Id",
+              "type": "integer"
+            },
+            "name": "experience_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/host/": {
+      "get": {
+        "tags": ["Hosts"],
+        "summary": "Get My Data",
+        "description": "The function `get_my_data` returns a dictionary with the result being the `host_user` object.\n    \n    \n**param** host_user: The parameter `host_user` is of type `schemas.HostUser` and is obtained by calling\n    the function `get_current_host` as a dependency\n    **type** host_user: schemas.HostUser\n    \n**return**: a dictionary with a key \"result\" and the value being the host_user object.",
+        "operationId": "get_my_data_host__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HostUserResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Hosts"],
+        "summary": "Delete My Account",
+        "description": "The function `delete_my_account` deletes the host user account if the provided password matches the\n    password of the host user.\n    \n    \n**param** password: The `password` parameter is a string that represents the password provided by the\n    user to verify their identity before deleting their account\n    **type** password: str\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session\n    **type** db: Session\n    \n**param** host_to_remove: The `host_to_remove` parameter is of type `schemas.HostUser` and is obtained\n    by calling the `get_current_host` dependency. It represents the host user that wants to delete their\n    account\n    **type** host_to_remove: schemas.HostUser\n    \n**return**: If the password verification is successful, the function will return a dictionary with the\n    key \"result\" and the value being the result of the `crud.delete_host()` function.",
+        "operationId": "delete_my_account_host__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Password",
+              "type": "string"
+            },
+            "name": "password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["Hosts"],
+        "summary": "Update My Info",
+        "description": "The function `update_my_info` updates the information of a host user in a database based on the\n    provided parameters.\n    \n    \n**param** new_name: The new name that you want to update for the host user\n    **type** new_name: str\n    \n**param** new_surname: The parameter `new_surname` is a string that represents the new surname or last\n    name that the user wants to update in their profile\n    **type** new_surname: str\n    \n**param** new_email: The new email address that you want to update for the host user\n    **type** new_email: str\n    \n**param** new_img_profile: The parameter `new_img_profile` is used to update the profile image of the\n    host user. It accepts a string value representing the new image URL or file path\n    **type** new_img_profile: str\n    \n**param** new_state_id: The parameter `new_state_id` is an optional integer parameter that represents\n    the new state ID for the host user. It has a default value of `None` and is constrained to be\n    greater than or equal to 1 and less than or equal to 2\n    **type** new_state_id: int\n    \n**param** new_telephone: The `new_telephone` parameter is used to update the telephone number of the\n    host user\n    **type** new_telephone: str\n    \n**param** host_user: The `host_user` parameter is of type `schemas.HostUser` and is obtained using the\n    `get_current_host` dependency. It represents the current host user for whom the information is being\n    updated\n    **type** host_user: schemas.HostUser\n    \n**param** db: The parameter `db` is of type `Session` and is used to access the database session. It is\n    passed as a dependency to the function `get_db` which is used to create a new database session for\n    each request\n    **type** db: Session\n    \n**return**: a dictionary with the key \"result\" and the value being the result of calling the `update`\n    function from the `crud` module with the `db_host_user` object as the `host_user` argument.",
+        "operationId": "update_my_info_host__patch",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "New Name",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_name",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Surname",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_surname",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Email",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_email",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Img Profile",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_img_profile",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New State Id",
+              "maximum": 2,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "name": "new_state_id",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "New Telephone",
+              "type": "string",
+              "default": ""
+            },
+            "name": "new_telephone",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/host/update_password": {
+      "patch": {
+        "tags": ["Hosts"],
+        "summary": "Update My Password",
+        "description": "The function `update_my_password` updates the password of a host user in a database if the old\n    password is verified and the new password is different from the old one.\n    \n    \n**param** old_password: The old password that the user wants to update\n    **type** old_password: str\n    \n**param** new_password: The new password that the user wants to set\n    **type** new_password: str\n    \n**param** host_user: The `host_user` parameter is of type `schemas.HostUser` and is obtained by calling\n    the `get_current_host` function. It represents the current host user who wants to update their\n    password\n    **type** host_user: schemas.HostUser\n    \n**param** db: The `db` parameter is a dependency that represents the database connection. It is\n    obtained using the `get_db` function, which is likely defined elsewhere in the code. This parameter\n    allows the function to interact with the database to perform operations such as retrieving and\n    updating user information\n    \n**return**: a dictionary with the key \"result\" and the value being the result of the `crud.update`\n    function.",
+        "operationId": "update_my_password_host_update_password_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Old Password",
+              "type": "string"
+            },
+            "name": "old_password",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "New Password",
+              "type": "string"
+            },
+            "name": "new_password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/host/signup": {
+      "post": {
+        "tags": ["Hosts"],
+        "summary": "Register Me",
+        "description": "The function `register_me` registers a new host user by creating a new `HostUser` object with the\n    provided information and storing it in the database.\n    \n    \n**param** host_user: The `host_user` parameter is of type `schemas.HostUserCreate`, which is a Pydantic\n    model representing the data required to create a new host user. It contains the following fields:\n    **type** host_user: schemas.HostUserCreate\n    \n**param** db: The `db` parameter is of type `Session` and is used to interact with the database. It is\n    obtained using the `get_db` function, which is a dependency that provides a database session\n    **type** db: Session\n    \n**return**: a dictionary with a key \"result\" and the value is the result of calling the\n    `create_host_user` function from the `crud` module with the provided `db` and `new_host_user`\n    arguments.",
+        "operationId": "register_me_host_signup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/HostUserCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/host/signin": {
+      "post": {
+        "tags": ["Hosts"],
+        "summary": "Signin",
+        "description": "The `login` function takes an email and password as input, authenticates the user, and returns an\n    access token if the authentication is successful.\n    \n    \n**param** email: The `email` parameter is a string that represents the user's email address. It is used\n    to identify the user during the login process\n    **type** email: str\n    \n**param** password: The `password` parameter is a string that represents the user's password\n    **type** password: str\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session. It is\n    obtained using the `get_db` dependency, which is likely a function that returns a database session.\n    The session is then passed to the `authenticate_host` function to authenticate the user\n    **type** db: Session\n    \n**return**: a dictionary with two keys: \"access_token\" and \"token_type\". The value of \"access_token\" is\n    the token generated by the `log.create_jwt()` function, and the value of \"token_type\" is \"bearer\".",
+        "operationId": "signin_host_signin_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Email",
+              "type": "string"
+            },
+            "name": "email",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Password",
+              "type": "string"
+            },
+            "name": "password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/experiences/": {
+      "get": {
+        "tags": ["Experiences"],
+        "summary": "Get Experiences",
+        "description": "The function `get_experiences` retrieves a list of experiences from a database, with pagination\n    support.\n    \n    \n**param** cursor: The `cursor` parameter is used for pagination. It represents the starting point or\n    the last item ID from which the experiences should be fetched. If a cursor value is provided, only\n    experiences with an ID greater than or equal to the cursor value will be returned\n    **type** cursor: Union[int, None]\n    \n**param** limit: The `limit` parameter is used to specify the maximum number of experiences to retrieve\n    from the database. By default, it is set to 20, but it can be overridden by passing a different\n    value when calling the `get_experiences` function\n    **type** limit: int\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session. It is\n    obtained using the `get_db` dependency\n    **type** db: Session\n    \n**param** _: The underscore (_) parameter is used to indicate that we are not using the value of that\n    parameter. In this case, it is used to indicate that we are not using the value of the\n    schemas.HostUser parameter in the function\n    **type** _: schemas.HostUser\n    \n**return**: The function `get_experiences` returns an instance of the `ExperienceResponse` class from\n    the `schemas` module. This instance contains the following attributes:",
+        "operationId": "get_experiences_experiences__get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Cursor",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Limit",
+              "exclusiveMinimum": 0,
+              "type": "integer",
+              "default": 20
+            },
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExperienceResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/experiences/update": {
+      "patch": {
+        "tags": ["Experiences"],
+        "summary": "Update",
+        "description": "The function `update` updates the fields of an experience object in the database based on the\n    provided experience data.\n    \n    \n**param** experience_id: The ID of the experience that needs to be updated\n    **type** experience_id: int\n    \n**param** experience_data: The `experience_data` parameter is an instance of the `ExperienceBase`\n    schema. It contains the updated data for an experience, including the title, description, difficulty\n    ID, price, image preview path, image paths, duration, and state ID\n    **type** experience_data: schemas.ExperienceBase\n    \n**param** db: The `db` parameter is an instance of the `Session` class, which represents a connection\n    to the database. It is used to perform database operations such as querying and updating data\n    **type** db: Session\n    \n**param** _: The underscore (_) parameter is used to indicate that the dependency is required but its\n    value is not used in the function. In this case, it is used to enforce the requirement that the user\n    must have admin privileges in order to access this endpoint\n    **type** _: schemas.HostUser\n    \n**return**: a dictionary with the key \"result\" and the value being the result of the `crud.update(db)`\n    function.",
+        "operationId": "update_experiences_update_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Experience Id",
+              "type": "integer"
+            },
+            "name": "experience_id",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExperienceBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/experiences/new": {
+      "post": {
+        "tags": ["Experiences"],
+        "summary": "Create",
+        "description": "The function creates a new experience in the database with the provided information.\n    \n    \n**param** experience: The `experience` parameter is of type `schemas.ExperienceBase`, which is a\n    Pydantic model representing the data required to create a new experience. It contains the following\n    attributes:\n    **type** experience: schemas.ExperienceBase\n    \n**param** db: The `db` parameter is a database session object. It is used to interact with the database\n    and perform CRUD operations\n    **type** db: Session\n    \n**param** _: The underscore (_) in the function signature is used as a variable name to indicate that\n    the value is not going to be used in the function. It is a convention to use underscore (_) as a\n    variable name when the value is not needed or not important in the context of the function\n    **type** _: schemas.HostUser\n    \n**return**: a dictionary with a key \"result\" and the value is the result of calling the function\n    `crud.create_experience` with the arguments `db=db` and `new_experience=new_experience`.",
+        "operationId": "create_experiences_new_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExperienceBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/experiences/delete": {
+      "delete": {
+        "tags": ["Experiences"],
+        "summary": "Delete",
+        "description": "The `delete` function deletes an experience from the database based on the provided experience ID.\n    \n    \n**param** experience_id: The ID of the experience that needs to be deleted\n    **type** experience_id: int\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session\n    **type** db: Session\n    \n**param** _: The underscore (_) parameter is used to indicate that the dependency is required but its\n    value is not going to be used in the function. In this case, it is used to indicate that the admin\n    privilege is required for this function, but the actual value of the admin user is not needed in the\n    function body\n    **type** _: schemas.HostUser\n    \n**return**: a dictionary with a key \"result\" and the value is the result of calling the\n    `crud.delete_experience` function with the `experience_to_remove` and `db` as arguments.",
+        "operationId": "delete_experiences_delete_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Experience Id",
+              "type": "integer"
+            },
+            "name": "experience_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/discoveries/": {
+      "get": {
+        "tags": ["Discoveries"],
+        "summary": "Get Discoveries",
+        "description": "The function `get_discoveries` retrieves a list of discoveries from a database based on specified\n    parameters and returns them in a standardized format.\n    \n    \n**param** cursor: The `cursor` parameter is used to specify the starting point for fetching\n    discoveries. It is an optional parameter and can be an integer value or `None`. If provided, it\n    should be greater than or equal to 0\n    **type** cursor: Union[int, None]\n    \n**param** limit: The `limit` parameter specifies the maximum number of discoveries to retrieve. The\n    default value is 20, but it can be overridden by passing a different value when calling the function\n    **type** limit: int\n    \n**param** category: The `category` parameter is an integer that represents the category of discoveries\n    to fetch. It has a default value of 1 and must be between 1 and 4 (inclusive)\n    **type** category: int\n    \n**param** all: The `all` parameter is a boolean flag that determines whether to fetch all discoveries\n    or only a subset of them. If `all` is set to `True`, all discoveries will be fetched. If `all` is\n    set to `False`, only a subset of discoveries will be fetched based on the, defaults to True\n    **type** all: bool (optional)\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session. It is\n    obtained using the `get_db` dependency\n    **type** db: Session\n    \n**param** _: The underscore (_) parameter is used to indicate that we are not using the value of that\n    parameter. It is commonly used when we need to include a dependency in the function signature but we\n    don't actually need to use the value of that dependency in the function body. In this case, the\n    underscore (_) parameter\n    **type** _: schemas.HostUser\n    \n**return**: a `schemas.DiscoveryResponse` object. This object contains the following attributes:",
+        "operationId": "get_discoveries_discoveries__get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Cursor",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Limit",
+              "exclusiveMinimum": 0,
+              "type": "integer",
+              "default": 20
+            },
+            "name": "limit",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Category",
+              "maximum": 4,
+              "minimum": 1,
+              "type": "integer",
+              "default": 1
+            },
+            "name": "category",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "All",
+              "type": "boolean",
+              "default": true
+            },
+            "name": "all",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DiscoveryResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["Discoveries"],
+        "summary": "Create",
+        "description": "The function creates a new discovery object in the database with the provided information.\n    \n    \n**param** discovery: The `discovery` parameter is an instance of the `DiscoveryBase` schema. It\n    contains the data needed to create a new discovery entry in the database\n    **type** discovery: schemas.DiscoveryBase\n    \n**param** db: The `db` parameter is a database session object. It is used to interact with the database\n    and perform CRUD operations\n    **type** db: Session\n    \n**param** _: The underscore (_) parameter is used as a placeholder for a variable that is not going to\n    be used in the function. In this case, it is used as a placeholder for the admin privilege, which is\n    obtained through the `auth.get_admin_privilege` dependency\n    \n**return**: a dictionary with a key \"result\" and the value is the result of calling the\n    `create_discovery` function from the `crud` module with the `db` and `new_discovery` arguments.",
+        "operationId": "create_discoveries__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoveryBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Discoveries"],
+        "summary": "Delete",
+        "description": "The `delete` function deletes a discovery from the database based on its ID.\n    \n    \n**param** discovery_id: The `discovery_id` parameter is an integer that represents the unique\n    identifier of the discovery that needs to be deleted\n    **type** discovery_id: int\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session\n    **type** db: Session\n    \n**param** _: The underscore (_) is used as a variable name to indicate that the value is not going to\n    be used in the function. It is commonly used when a function requires a certain dependency or\n    parameter, but the value itself is not needed within the function's logic\n    \n**return**: a dictionary with a key \"result\" and the value being the result of calling the\n    `crud.delete_discovery()` function.",
+        "operationId": "delete_discoveries__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Discovery Id",
+              "type": "integer"
+            },
+            "name": "discovery_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["Discoveries"],
+        "summary": "Update",
+        "description": "The function `update` updates the fields of a discovery object in the database based on the provided\n    data.\n    \n    \n**param** discovery_id: The `discovery_id` parameter is an integer that represents the unique\n    identifier of a discovery. It is used to identify the specific discovery that needs to be updated\n    **type** discovery_id: int\n    \n**param** discovery_data: The `discovery_data` parameter is an instance of the `DiscoveryBase` schema.\n    It contains the data that will be used to update the discovery object\n    **type** discovery_data: schemas.DiscoveryBase\n    \n**param** db: The `db` parameter is an instance of the `Session` class, which represents a connection\n    to the database. It is used to perform database operations such as querying and updating data\n    **type** db: Session\n    \n**param** _: The underscore (_) is used as a variable name to indicate that the value is not going to\n    be used in the function. It is commonly used when a function requires a certain parameter but the\n    value of that parameter is not needed within the function itself\n    \n**return**: a dictionary with the key \"result\" and the value being the result of the `crud.update(db)`\n    function.",
+        "operationId": "update_discoveries__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Discovery Id",
+              "type": "integer"
+            },
+            "name": "discovery_id",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DiscoveryBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/discoveries/distance": {
+      "get": {
+        "tags": ["Discoveries"],
+        "summary": "Distance",
+        "description": "The function calculates the distances from a given position to discoveries and returns the results\n    in kilometers.\n    \n    \n**param** my_position: The `my_position` parameter is a string representing the position of the user.\n    It should be in the format \"latitude, longitude\" or \"longitude, latitude\". For example, \"40.7128,\n    -74.0060\" represents the position of New York City\n    **type** my_position: str\n    \n**param** db: The `db` parameter is a database session object. It is used to interact with the database\n    and perform CRUD operations\n    **type** db: Session\n    \n**param** _: The underscore (_) in the function signature is used as a placeholder for a variable that\n    is not going to be used in the function. In this case, it is used to indicate that the function\n    depends on the `schemas.HostUser` dependency, but the value of that dependency is not going to be\n    used\n    **type** _: schemas.HostUser\n    \n**return**: a dictionary with the key \"result\" and the value being another dictionary. The inner\n    dictionary contains the distances in kilometers from the given position to the discoveries found in\n    the database.",
+        "operationId": "distance_discoveries_distance_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "My Position",
+              "type": "string"
+            },
+            "name": "my_position",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DistanceResponseModel"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/images/": {
+      "post": {
+        "tags": ["Images"],
+        "summary": "New List",
+        "description": "The function `new_list` takes in a user and a list of files, uploads each file, and returns a list\n    of URLs for the uploaded files.\n    \n    \n**param** user: The \"user\" parameter is a dependency that is obtained using the\n    \"auth.get_tourist_host_admin_privilege\" function. It is used to authenticate and authorize the user\n    making the request\n    \n**param** fileList: The `fileList` parameter is a list of `UploadFile` objects. It is used to pass\n    multiple files to the `new_list` function for processing\n    **type** fileList: List[UploadFile]\n    \n**return**: a dictionary with a key \"result\" and a value that is a list of URLs.",
+        "operationId": "new_list_images__post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_new_list_images__post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["Images"],
+        "summary": "Delete List",
+        "description": "The function `delete_list` takes a list of file names, deletes each file, and returns a dictionary\n    with the results of the deletion.\n    \n    \n**param** fileList: The fileList parameter is a list of strings that represents the names of the files\n    that need to be deleted\n    **type** fileList: List[str]\n    \n**param** user: The \"user\" parameter is an optional parameter that is passed to the \"delete_list\"\n    function. It is used to authenticate the user and check if they have the necessary privileges to\n    perform the delete operation\n    \n**return**: a dictionary with a key \"result\" and the value being a list of results from deleting each\n    file in the fileList.",
+        "operationId": "delete_list_images__delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "title": "Filelist",
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["Images"],
+        "summary": "Update",
+        "description": "The `update` function uploads a file to an S3 bucket and returns the URL of the uploaded file.\n    \n    \n**param** old_file_name: The `old_file_name` parameter is a string that represents the name of the\n    existing file that needs to be updated\n    **type** old_file_name: str\n    \n**param** user: The `user` parameter is used to specify the user who is updating the file. It is\n    expected to be a string representing the user's name or ID. This parameter is decorated with\n    `Depends(auth.get_tourist_host_admin_priviledge)`, which suggests that it is a dependency injection\n    \n**param** file: The `file` parameter is of type `UploadFile` and represents the file that needs to be\n    uploaded. It is required and cannot be empty\n    **type** file: UploadFile\n    \n**return**: a dictionary with a key \"result\" and the value being the URL of the uploaded image.",
+        "operationId": "update_images__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Old File Name",
+              "type": "string"
+            },
+            "name": "old_file_name",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_update_images__patch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/login": {
+      "post": {
+        "tags": ["Admin"],
+        "summary": "Login",
+        "description": "The login function checks if the provided username and password are correct and returns an access\n    token if authentication is successful, otherwise it raises an HTTPException.\n    \n    \n**param** username: The `username` parameter is a string that represents the username entered by the\n    user during the login process. It is used to identify the user and authenticate their credentials\n    **type** username: str\n    \n**param** password: The `password` parameter is a string that represents the user's password\n    **type** password: str\n    \n**return**: a dictionary with two keys: \"access_token\" and \"token_type\". The value of \"access_token\" is\n    the token generated by the create_jwt function, and the value of \"token_type\" is \"bearer\".",
+        "operationId": "login_admin_login_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Username",
+              "type": "string"
+            },
+            "name": "username",
+            "in": "query"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Password",
+              "type": "string"
+            },
+            "name": "password",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Token"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/admin/toggle_tourist_activation": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "Toggle Tourist Activation",
+        "description": "The function `toggle_tourist_activation` toggles the activation state of a tourist user in a\n    database.\n    \n    \n**param** tourist_id: The `tourist_id` parameter is an integer that represents the ID of the tourist\n    user that we want to toggle the activation state for\n    **type** tourist_id: int\n    \n**param** _: The underscore (_) is used as a placeholder for a variable that is not going to be used in\n    the function. In this case, it is used as a placeholder for the \"Depends(auth.get_admin_privilege)\"\n    parameter\n    \n**param** db: The `db` parameter is a dependency that represents the database session. It is used to\n    interact with the database and perform CRUD operations\n    **type** db: Session\n    \n**return**: a dictionary with the key \"result\" and the value being the result of the CRUD update\n    operation on the tourist user.",
+        "operationId": "toggle_tourist_activation_admin_toggle_tourist_activation_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Tourist Id",
+              "type": "integer"
+            },
+            "name": "tourist_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/toggle_host_activation": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "Toggle Host Activation",
+        "description": "The function `toggle_host_activation` toggles the activation state of a host user in a database.\n    \n    \n**param** host_id: The `host_id` parameter is an integer that represents the ID of the host user that\n    we want to toggle the activation state for\n    **type** host_id: int\n    \n**param** _: The underscore (_) is used as a placeholder variable name. In this case, it is used to\n    indicate that the \"auth.get_admin_privilege\" dependency is not being used in the function\n    \n**param** db: The `db` parameter is a dependency injection for the database session. It is used to\n    interact with the database and perform CRUD operations\n    **type** db: Session\n    \n**return**: a dictionary with a single key-value pair. The key is \"result\" and the value is the result\n    of calling the `crud.update` function with the `db` and `host_user` arguments.",
+        "operationId": "toggle_host_activation_admin_toggle_host_activation_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Host Id",
+              "type": "integer"
+            },
+            "name": "host_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/toggle_experience_activation": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "Toggle Experience Activation",
+        "description": "The function `toggle_experience_activation` toggles the activation state of an experience in a\n    database.\n    \n    \n**param** experience_id: The `experience_id` parameter is an integer that represents the unique\n    identifier of an experience. It is used to retrieve the specific experience from the database\n    **type** experience_id: int\n    \n**param** _: The underscore (_) is used as a placeholder for a variable that is not going to be used in\n    the function. In this case, it is used as a placeholder for the \"Depends(auth.get_admin_privilege)\"\n    parameter\n    \n**param** db: The `db` parameter is a dependency injection for the database session. It is used to\n    interact with the database and perform CRUD operations\n    **type** db: Session\n    \n**return**: a dictionary with a key \"result\" and the value being the result of the `crud.update()`\n    function.",
+        "operationId": "toggle_experience_activation_admin_toggle_experience_activation_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Experience Id",
+              "type": "integer"
+            },
+            "name": "experience_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/admin/toggle_discovery_activation": {
+      "patch": {
+        "tags": ["Admin"],
+        "summary": "Toggle Discovery Activation",
+        "description": "The function `toggle_discovery_activation` toggles the activation state of a discovery experience in\n    a database.\n    \n    \n**param** discovery_id: The `discovery_id` parameter is an integer that represents the ID of the\n    discovery that needs to be toggled\n    **type** discovery_id: int\n    \n**param** _: The underscore (_) in the function signature is used as a placeholder for a variable that\n    is not going to be used. In this case, it is used to indicate that the \"Depends\" function is being\n    called with the \"auth.get_admin_privilege\" function as an argument, but the result of\n    \n**param** db: The `db` parameter is a dependency injection for the database session. It is used to\n    interact with the database and perform CRUD operations\n    **type** db: Session\n    \n**return**: a dictionary with a key \"result\" and the value being the result of the `crud.update()`\n    function.",
+        "operationId": "toggle_discovery_activation_admin_toggle_discovery_activation_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Discovery Id",
+              "type": "integer"
+            },
+            "name": "discovery_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    },
+    "/popup/": {
+      "get": {
+        "tags": ["PopupMsg"],
+        "summary": "Get Msgs",
+        "description": "The function `get_msgs` retrieves popup messages from a database and returns them in a paginated\n    response.\n    \n    \n**param** cursor: The `cursor` parameter is used to specify the starting point for retrieving popup\n    messages. It is an optional parameter and can be an integer value or `None`. If a cursor value is\n    provided, the function will retrieve popup messages starting from that cursor value. If `None` is\n    provided, the function\n    **type** cursor: Union[int, None]\n    \n**param** limit: The `limit` parameter specifies the maximum number of popup messages to retrieve. By\n    default, it is set to 20, but you can provide a different value if needed\n    **type** limit: int\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session. It is\n    passed as a dependency using the `Depends` function\n    **type** db: Session\n    \n**param** _: The parameter \"_\" is of type \"schemas.HostUser\" and is used to authenticate the user and\n    check if they have the necessary privileges (tourist, host, or admin) to access the function\n    **type** _: schemas.HostUser\n    \n**return**: The function `get_msgs` returns a `schemas.PopupResponse` object.",
+        "operationId": "get_msgs_popup__get",
+        "parameters": [
+          {
+            "required": false,
+            "schema": {
+              "title": "Cursor",
+              "minimum": 0,
+              "type": "integer"
+            },
+            "name": "cursor",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Limit",
+              "exclusiveMinimum": 0,
+              "type": "integer",
+              "default": 20
+            },
+            "name": "limit",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PopupResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": ["PopupMsg"],
+        "summary": "Create",
+        "description": "The `create` function creates a new popup message in the database.\n    \n    \n**param** popup: The `popup` parameter is of type `schemas.PopupMsgBase` and represents the data for\n    creating a new popup message\n    **type** popup: schemas.PopupMsgBase\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session\n    **type** db: Session\n    \n**param** _: The underscore (_) is used as a variable name to indicate that the value is not going to\n    be used in the function. In this case, it is used as a placeholder for the HostUser object returned\n    by the auth.get_admin_privilege function\n    **type** _: schemas.HostUser\n    \n**return**: a dictionary with a key \"result\" and a value of True if the popup message is successfully\n    created in the database. If the popup message is not found, it raises an HTTPException with a status\n    code of 404 and a detail message of \"No popup messages found.\"",
+        "operationId": "create_popup__post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PopupMsgBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": ["PopupMsg"],
+        "summary": "Delete",
+        "description": "The function `delete` deletes a popup message from the database if it exists, otherwise it raises a\n    404 error.\n    \n    \n**param** popup_id: The `popup_id` parameter is an integer that represents the unique identifier of the\n    popup message that needs to be deleted\n    **type** popup_id: int\n    \n**param** db: The `db` parameter is of type `Session` and is used to access the database session for\n    performing CRUD operations\n    **type** db: Session\n    \n**param** _: The underscore (_) is used as a variable name to indicate that the value is not going to\n    be used in the function. In this case, it is used to indicate that the schemas.HostUser object\n    returned by the auth.get_admin_privilege function is not going to be used in the delete function\n    **type** _: schemas.HostUser\n    \n**return**: a dictionary with a key \"result\" and the value is the result of calling the function\n    `crud.delete_popup_msg()` with the arguments `db=db` and `popup_to_delete=popup_to_delete`.",
+        "operationId": "delete_popup__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Popup Id",
+              "type": "integer"
+            },
+            "name": "popup_id",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": ["PopupMsg"],
+        "summary": "Update",
+        "description": "The `update` function updates a popup message in the database if it exists, otherwise it raises a\n    404 error.\n    \n    \n**param** popup_id: The `popup_id` parameter is an integer that represents the unique identifier of the\n    popup message that needs to be updated\n    **type** popup_id: int\n    \n**param** popup: The `popup` parameter is of type `schemas.PopupMsgBase` and represents the updated\n    popup message data that will be used to update the existing popup message\n    **type** popup: schemas.PopupMsgBase\n    \n**param** db: The `db` parameter is a database session object. It is used to interact with the database\n    and perform CRUD (Create, Read, Update, Delete) operations\n    **type** db: Session\n    \n**param** _: The underscore (_) parameter is used to indicate that the dependency is not being used in\n    the function. In this case, it is used to indicate that the schemas.HostUser dependency is not being\n    used in the function\n    **type** _: schemas.HostUser\n    \n**return**: a dictionary with the key \"result\" and the value being the result of the `crud.update(db)`\n    function.",
+        "operationId": "update_popup__patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Popup Id",
+              "type": "integer"
+            },
+            "name": "popup_id",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PopupMsgBase"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "OAuth2PasswordBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_new_images__post": {
+        "title": "Body_new_images__post",
+        "required": ["file"],
+        "type": "object",
+        "properties": {
+          "file": {
+            "title": "File",
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "Body_new_list_images__post": {
+        "title": "Body_new_list_images__post",
+        "required": ["fileList"],
+        "type": "object",
+        "properties": {
+          "fileList": {
+            "title": "Filelist",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      },
+      "Body_update_images__patch": {
+        "title": "Body_update_images__patch",
+        "required": ["file"],
+        "type": "object",
+        "properties": {
+          "file": {
+            "title": "File",
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "Discovery": {
+        "title": "Discovery",
+        "required": [
+          "title",
+          "description",
+          "img_preview_path",
+          "img_paths",
+          "video_paths",
+          "coordinate_gps",
+          "address",
+          "kind_id",
+          "state_id",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "img_preview_path": {
+            "title": "Img Preview Path",
+            "type": "string"
+          },
+          "img_paths": {
+            "title": "Img Paths",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "video_paths": {
+            "title": "Video Paths",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "coordinate_gps": {
+            "title": "Coordinate Gps",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "kind_id": {
+            "title": "Kind Id",
+            "type": "integer"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          }
+        }
+      },
+      "DiscoveryBase": {
+        "title": "DiscoveryBase",
+        "required": [
+          "title",
+          "description",
+          "img_preview_path",
+          "img_paths",
+          "video_paths",
+          "address",
+          "kind_id",
+          "state_id"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "img_preview_path": {
+            "title": "Img Preview Path",
+            "type": "string"
+          },
+          "img_paths": {
+            "title": "Img Paths",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "video_paths": {
+            "title": "Video Paths",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "coordinate_gps": {
+            "title": "Coordinate Gps",
+            "type": "string"
+          },
+          "address": {
+            "title": "Address",
+            "type": "string"
+          },
+          "kind_id": {
+            "title": "Kind Id",
+            "type": "integer"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          }
+        }
+      },
+      "DiscoveryResponse": {
+        "title": "DiscoveryResponse",
+        "required": ["has_more", "items"],
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "title": "Cursor",
+            "type": "integer"
+          },
+          "has_more": {
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "title": "Items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Discovery"
+            }
+          }
+        }
+      },
+      "DistanceResponseModel": {
+        "title": "DistanceResponseModel",
+        "required": ["result"],
+        "type": "object",
+        "properties": {
+          "result": {
+            "title": "Result",
+            "type": "object"
+          }
+        }
+      },
+      "Experience": {
+        "title": "Experience",
+        "required": [
+          "title",
+          "description",
+          "difficulty_id",
+          "price",
+          "duration",
+          "img_preview_path",
+          "img_paths",
+          "state_id",
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "difficulty_id": {
+            "title": "Difficulty Id",
+            "type": "integer"
+          },
+          "price": {
+            "title": "Price",
+            "type": "object"
+          },
+          "duration": {
+            "title": "Duration",
+            "type": "string",
+            "format": "time"
+          },
+          "img_preview_path": {
+            "title": "Img Preview Path",
+            "type": "string"
+          },
+          "img_paths": {
+            "title": "Img Paths",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          }
+        }
+      },
+      "ExperienceBase": {
+        "title": "ExperienceBase",
+        "required": [
+          "title",
+          "description",
+          "difficulty_id",
+          "price",
+          "duration",
+          "img_preview_path",
+          "img_paths",
+          "state_id"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "title": "Title",
+            "type": "string"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string"
+          },
+          "difficulty_id": {
+            "title": "Difficulty Id",
+            "type": "integer"
+          },
+          "price": {
+            "title": "Price",
+            "type": "object"
+          },
+          "duration": {
+            "title": "Duration",
+            "type": "string",
+            "format": "time"
+          },
+          "img_preview_path": {
+            "title": "Img Preview Path",
+            "type": "string"
+          },
+          "img_paths": {
+            "title": "Img Paths",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          }
+        }
+      },
+      "ExperienceResponse": {
+        "title": "ExperienceResponse",
+        "required": ["has_more", "items"],
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "title": "Cursor",
+            "type": "integer"
+          },
+          "has_more": {
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "title": "Items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Experience"
+            }
+          }
+        }
+      },
+      "HTTPValidationError": {
+        "title": "HTTPValidationError",
+        "type": "object",
+        "properties": {
+          "detail": {
+            "title": "Detail",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            }
+          }
+        }
+      },
+      "HostUserBase": {
+        "title": "HostUserBase",
+        "required": ["name", "email", "img_profile", "state_id"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "img_profile": {
+            "title": "Img Profile",
+            "type": "string"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          }
+        }
+      },
+      "HostUserCreate": {
+        "title": "HostUserCreate",
+        "required": ["name", "email", "img_profile", "state_id", "password"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "img_profile": {
+            "title": "Img Profile",
+            "type": "string"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          }
+        }
+      },
+      "HostUserResponse": {
+        "title": "HostUserResponse",
+        "required": ["result"],
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/HostUserBase"
+          }
+        }
+      },
+      "PopupMsg": {
+        "title": "PopupMsg",
+        "required": ["text", "id"],
+        "type": "object",
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          }
+        }
+      },
+      "PopupMsgBase": {
+        "title": "PopupMsgBase",
+        "required": ["text"],
+        "type": "object",
+        "properties": {
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        }
+      },
+      "PopupResponse": {
+        "title": "PopupResponse",
+        "required": ["has_more", "items"],
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "title": "Cursor",
+            "type": "integer"
+          },
+          "has_more": {
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "items": {
+            "title": "Items",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PopupMsg"
+            }
+          }
+        }
+      },
+      "SingleDiscoveryResponse": {
+        "title": "SingleDiscoveryResponse",
+        "required": ["result"],
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/Discovery"
+          }
+        }
+      },
+      "SingleExperienceResponse": {
+        "title": "SingleExperienceResponse",
+        "required": ["result"],
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/Experience"
+          }
+        }
+      },
+      "SinglePopupResponse": {
+        "title": "SinglePopupResponse",
+        "required": ["result"],
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/PopupMsg"
+          }
+        }
+      },
+      "Token": {
+        "title": "Token",
+        "required": ["access_token", "token_type"],
+        "type": "object",
+        "properties": {
+          "access_token": {
+            "title": "Access Token",
+            "type": "string"
+          },
+          "token_type": {
+            "title": "Token Type",
+            "type": "string"
+          }
+        }
+      },
+      "TouristUserBase": {
+        "title": "TouristUserBase",
+        "required": [
+          "name",
+          "surname",
+          "email",
+          "img_profile",
+          "state_id",
+          "telephone"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "surname": {
+            "title": "Surname",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "img_profile": {
+            "title": "Img Profile",
+            "type": "string"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          },
+          "telephone": {
+            "title": "Telephone",
+            "type": "string"
+          }
+        }
+      },
+      "TouristUserCreate": {
+        "title": "TouristUserCreate",
+        "required": [
+          "name",
+          "surname",
+          "email",
+          "img_profile",
+          "state_id",
+          "telephone",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "surname": {
+            "title": "Surname",
+            "type": "string"
+          },
+          "email": {
+            "title": "Email",
+            "type": "string"
+          },
+          "img_profile": {
+            "title": "Img Profile",
+            "type": "string"
+          },
+          "state_id": {
+            "title": "State Id",
+            "type": "integer"
+          },
+          "telephone": {
+            "title": "Telephone",
+            "type": "string"
+          },
+          "password": {
+            "title": "Password",
+            "type": "string"
+          }
+        }
+      },
+      "TouristUserResponse": {
+        "title": "TouristUserResponse",
+        "required": ["result"],
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/TouristUserBase"
+          }
+        }
+      },
+      "ValidationError": {
+        "title": "ValidationError",
+        "required": ["loc", "msg", "type"],
+        "type": "object",
+        "properties": {
+          "loc": {
+            "title": "Location",
+            "type": "array",
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "msg": {
+            "title": "Message",
+            "type": "string"
+          },
+          "type": {
+            "title": "Error Type",
+            "type": "string"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": {
+          "password": {
+            "scopes": {},
+            "tokenUrl": "login_admin"
+          }
+        }
+      }
+    }
+  }
+}
