@@ -104,3 +104,49 @@ html {
 .images-swap-webapp {
   margin-top: 9rem;
 }
+
+.bump-on-hover {
+  transition: 0.2s ease-in-out;
+}
+.bump-on-hover:hover {
+  animation: bump 1s ease-in-out;
+}
+
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.bump-on-hover-lg {
+  transition: 0.2s ease-in-out;
+}
+.bump-on-hover-lg:hover {
+  animation: bump-lg 0.9s ease-in-out;
+}
+
+@keyframes bump-lg {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.scale-on-hover-sm {
+  transition: 0.4s ease-in-out;
+}
+
+.scale-on-hover-sm:hover {
+  transform: scale(1.03);
+}
